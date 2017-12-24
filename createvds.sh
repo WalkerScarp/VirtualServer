@@ -1,3 +1,4 @@
+#!/bin/bash
 #-n vds: имя новой виртуальной машины, в данном примере vds.
 #-r 256: определяет размер памяти виртуальной машины в мегабайтах.
 #–disk path=/home/vds.img,bus=virtio,size=4: указывает путь к виртуальному диску, который может быть файлом, разделом или логическим томом. В этом примере файл с именем web_devel.img в каталоге /var/lib/libvirt/images/ размером 4 гигабайта, использующий virtio в качестве дисковой шины.
@@ -7,8 +8,20 @@
 #–vnc: предоставление гостевой виртуальной консоли через VNC.
 #–noautoconsole: не подключается автоматически к консоли виртуальной машины.
 #-v: создает полностью вируализированную гостевую систему.
-#!/bin/bash
-sudo virt-install -n vds -r 256 \
---disk path=/home/vds.img,bus=virtio,size=4 -c \
-jeos.iso --accelerate --network network=default,model=virtio \
+name=''
+ram=''
+size=''
+iso=''
+echo -n 'Укажите имя виртуальной машины: '
+read name
+echo -n 'Укажите объем оперативной памяти виртуальной машины в мегабайтах: '
+read ram
+echo -n 'Укажите объем выделяемой для виртуальной машины в гигабайтах: '
+read size
+echo -n 'Укажите путь до образа операционной системы для виртуальной машины: '
+read iso
+
+sudo virt-install -n $name -r $ram \
+--disk path=/home/$name.img,bus=virtio,size=$size -c \
+$iso --accelerate --network network=default,model=virtio \
 --connect=qemu:///system --vnc --noautoconsole -v
